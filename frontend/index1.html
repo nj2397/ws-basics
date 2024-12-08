@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./index1.css">
+    </head>
+    <body>        
+        <div>
+            <p>Client 1</p>
+        </div>
+        <div class="container-body"> 
+            <div class="chat-body"> 
+                <p class="chat-section-sentence">
+                    Chat Section
+                </p>
+                <div class="chat-messages" id="chat-message-section"> 
+                </div>
+                <div class="chat-footer"> 
+                    <input type="text" placeholder="Type your message..." class="message-input" onkeypress="handleKeyPress(event)"/> 
+                    <button onclick="sendMessage()">Send</button> 
+                </div> 
+            </div> 
+        </div>
+        <script>
+            const socket = new WebSocket("ws://localhost:3000");
+            const messages = [];
+
+            socket.addEventListener('open', (event) => {
+                console.log('Connected to Web Server')
+            })
+
+            socket.addEventListener('message', (event) => {
+                if (event.data.startsWith("id:"))
+                    localStorage.setItem('clientId-1', event.data.split(":")[1].trim())
+                    else { 
+                        const message = event.data.split(":")[1].trim();
+                        messages.push({
+                            "id": 2,
+                            "chat": message
+                        }); 
+                        displayMessages();
+                    }
+            })
+
+            const sendMessage = () => {
+
+                const input = document.getElementsByClassName("message-input");
+                const targetClientId = localStorage.getItem('clientId-2')
+
+                const data = JSON.stringify({ targetClientId, message: input[0].value }); 
+                messages.push({
+                    "id": 1,
+                    "chat": input[0].value
+                })
+                socket.send(data);   
+                input[0].value = '';  
+                displayMessages();                        
+            }
+
+            const handleKeyPress = (event) => {
+                if (event.key === 'Enter')
+                    sendMessage();
+            }
+
+            const displayMessages = () => {
+                const chatMessagesDiv = document.getElementById('chat-message-section');
+                chatMessagesDiv.innerHTML = "";
+                
+                messages.forEach(msg => {
+                    console.log('messages --> ', msg)
+                    let chatContent = document.createElement("div");
+                    chatContent.textContent = msg.chat;
+                    chatContent.classList.add("chat-message"); 
+                    if (msg.id === 1) {
+                        chatContent.classList.add("client"); 
+                    } else { 
+                        chatContent.classList.add("recipient"); 
+                    }
+                    chatMessagesDiv.appendChild(chatContent)
+                })
+            }
+
+        </script>
+    </body> 
+</html>
+
+
