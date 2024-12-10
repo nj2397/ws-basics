@@ -9,24 +9,27 @@
         <link rel="stylesheet" href="./index1.css">
     </head>
     <body>        
-        <div>
-            <p>Client 1</p>
-        </div>
-        <div class="container-body"> 
-            <div class="chat-body"> 
-                <p class="chat-section-sentence">
+        <div class="container-body">
+            <div class="chat-container-body"> 
+                <div style="margin-bottom: 1%">
                     Chat Section
-                </p>
-                <div class="chat-messages" id="chat-message-section"> 
                 </div>
-                <div class="chat-footer"> 
-                    <input type="text" placeholder="Type your message..." class="message-input" onkeypress="handleKeyPress(event)"/> 
-                    <button onclick="sendMessage()">Send</button> 
+                <div class="chat-body"> 
+                    <p class="chat-section-sentence">
+                        Client 1
+                    </p>
+                    <div class="chat-messages" id="chat-message-section"> 
+                    </div>
+                    <div class="chat-footer"> 
+                        <input type="text" placeholder="Type your message..." class="message-input" onkeypress="handleKeyPress(event)"/> 
+                        <button onclick="sendMessage()">Send</button> 
+                    </div> 
                 </div> 
-            </div> 
+            </div>
         </div>
         <script>
-            const socket = new WebSocket("ws://localhost:3000");
+            // const socket = new WebSocket("ws://localhost:3000/");
+            const socket = new WebSocket("wss://ws-basics.onrender.com");
             const messages = [];
 
             socket.addEventListener('open', (event) => {
