@@ -6,7 +6,7 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./index2.css">
+        <link rel="stylesheet" href="./client1.css">
     </head>
     <body>        
         <div class="container-body">
@@ -16,7 +16,7 @@
                 </div>
                 <div class="chat-body"> 
                     <p class="chat-section-sentence">
-                        Client 2
+                        Client 1
                     </p>
                     <div class="chat-messages" id="chat-message-section"> 
                     </div>
@@ -28,8 +28,8 @@
             </div>
         </div>
         <script>
-            // const socket = new WebSocket("ws://localhost:3000");
-            const socket = new WebSocket("wss://ws-basics.onrender.com")
+            // const socket = new WebSocket("ws://localhost:3000/");
+            const socket = new WebSocket("wss://ws-basics.onrender.com");
             const messages = [];
 
             socket.addEventListener('open', (event) => {
@@ -38,31 +38,30 @@
 
             socket.addEventListener('message', (event) => {
                 if (event.data.startsWith("id:"))
-                    localStorage.setItem('clientId-2', event.data.split(":")[1].trim())
-                else { 
-                    const message = event.data.split(":")[1].trim();
-                    messages.push({
-                        "id": 1,
-                        "chat": message
-                    }); 
-                    displayMessages();
-                }
+                    localStorage.setItem('clientId-1', event.data.split(":")[1].trim())
+                    else { 
+                        const message = event.data.split(":")[1].trim();
+                        messages.push({
+                            "id": 2,
+                            "chat": message
+                        }); 
+                        displayMessages();
+                    }
             })
 
             const sendMessage = () => {
 
                 const input = document.getElementsByClassName("message-input");
-                const targetClientId = localStorage.getItem('clientId-1')
-                console.log('targetClientId: ', targetClientId);
+                const targetClientId = localStorage.getItem('clientId-2')
 
-                const data = JSON.stringify({ targetClientId, message: input[0].value });
+                const data = JSON.stringify({ targetClientId, message: input[0].value }); 
                 messages.push({
-                    "id": 2,
+                    "id": 1,
                     "chat": input[0].value
-                }) 
-                socket.send(data);  
-                input[0].value = '';
-                displayMessages();                           
+                })
+                socket.send(data);   
+                input[0].value = '';  
+                displayMessages();                        
             }
 
             const handleKeyPress = (event) => {
@@ -75,10 +74,11 @@
                 chatMessagesDiv.innerHTML = "";
                 
                 messages.forEach(msg => {
+                    console.log('messages --> ', msg)
                     let chatContent = document.createElement("div");
                     chatContent.textContent = msg.chat;
                     chatContent.classList.add("chat-message"); 
-                    if (msg.id === 2) {
+                    if (msg.id === 1) {
                         chatContent.classList.add("client"); 
                     } else { 
                         chatContent.classList.add("recipient"); 
@@ -88,5 +88,7 @@
             }
 
         </script>
-    </body>
+    </body> 
 </html>
+
+
